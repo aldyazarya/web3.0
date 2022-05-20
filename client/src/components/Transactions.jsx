@@ -13,7 +13,7 @@ const TransactionCard = ({
   amount,
   url,
 }) => {
-  const gifUrl = useFetch({ keyword });
+  const gifUrl = useFetch({keyword});
 
   return (
     <div
@@ -55,6 +55,7 @@ const TransactionCard = ({
         </div>
         <img
           src={gifUrl || url}
+          // src="https://media3.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif?cid=07f5f48686mhzrbe5fyg2i1gx6tau2p2phzecbv595mjqvai&rid=giphy.gif&ct=g"
           alt="gif"
           className="w-full h-64 2xl:h-96 rounded-md shadow-lg object-cover"
         />
@@ -67,7 +68,7 @@ const TransactionCard = ({
 };
 
 const Transactions = () => {
-  const { currentAccount } = useContext(TransactionContext);
+  const { currentAccount, transactions } = useContext(TransactionContext);
 
   return (
     <div className="flex w-full justify-center items-center 2xl:px-20 gradient-bg-transactions">
@@ -83,7 +84,7 @@ const Transactions = () => {
         )}
 
         <div className="flex flex-wrap justify-center items-center mt-10">
-          {dummyData.reverse().map((transaction, i) => (
+          {transactions.reverse().map((transaction, i) => (
             <TransactionCard key={i} {...transaction} />
           ))}
         </div>
