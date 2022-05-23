@@ -7,32 +7,16 @@ export const TransactionContext = React.createContext();
 
 const { ethereum } = window;
 
-const getEthereumContract =  () => {
-
-    try {
+const createEthereumContract =  () => {
       const provider =  new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
-      const transactionContract = new ethers.Contract(
-        contractAddress,
-        contractABI,
-        signer
-      );
+      const transactionContract = new ethers.Contract(contractAddress,contractABI,signer);
       return transactionContract;
-    } catch (error) {
-      console.log(error);
-      throw new Error("Error getting contract");
-
-    }
 };
 
 export const TransactionProvider = ({ children }) => {
+  const [formData, setFormData] = useState({addressTo: "",amount: "",keyword: "",message: "",});
   const [currentAccount, setCurrentAccount] = useState("");
-  const [formData, setFormData] = useState({
-    addressTo: "",
-    amount: "",
-    keyword: "",
-    message: "",
-  });
   const [isLoading, setIsLoading] = useState(false);
   const [transactionCount, setTransactionCount] = useState(
     localStorage.getItem("transactionCount")
@@ -46,7 +30,7 @@ export const TransactionProvider = ({ children }) => {
   const getAllTransactions = async () => {
     try {
       if (!ethereum) return alert("Please install metamask");
-      const transactionContract = getEthereumContract();
+      const transactionContract = createEthereumContract();
       const availableTransactions =
         await transactionContract.getAllTransactions();
 
@@ -90,7 +74,7 @@ export const TransactionProvider = ({ children }) => {
 
   const checkIfTransactionsExist = async () => {
     try {
-      const transactionContract = getEthereumContract();
+      const transactionContract = createEthereumContract();
       const transactionCount = await transactionContract.getTransactionCount();
 
       window.localStorage.setItem("transactionCount", transactionCount);
@@ -119,7 +103,7 @@ export const TransactionProvider = ({ children }) => {
       if (!ethereum) return alert("Please install metamask");
 
       const { addressTo, amount, keyword, message } = formData;
-      const transactionContract = getEthereumContract();
+      const transactionContract = createEthereumContract();
       const parsedAmount = ethers.utils.parseEther(amount);
 
       await ethereum.request({
@@ -166,14 +150,15 @@ export const TransactionProvider = ({ children }) => {
   return (
     <TransactionContext.Provider
       value={{
+        transactionCount,
         connectWallet,
+        transactions,
         currentAccount,
+        isLoading,
+        sendTransaction,
+        handleChange,
         formData,
         setFormData,
-        handleChange,
-        sendTransaction,
-        transactions,
-        isLoading
       }}
     >
       {children}
