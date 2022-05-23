@@ -31,6 +31,6 @@ module.exports = {
   variants: {
     extend: {},
   },
-  Plugins:[]
-  // plugins: [require("@tailwindcss/forms")],
+  Plugins:[],
+  plugins: [require("@tailwindcss/forms")],
 };

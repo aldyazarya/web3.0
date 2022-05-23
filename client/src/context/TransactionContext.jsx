@@ -7,16 +7,22 @@ export const TransactionContext = React.createContext();
 
 const { ethereum } = window;
 
-const getEthereumContract = () => {
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
-  const transactionContract = new ethers.Contract(
-    contractAddress,
-    contractABI,
-    signer
-  );
+const getEthereumContract =  () => {
 
-  return transactionContract;
+    try {
+      const provider =  new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const transactionContract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
+      return transactionContract;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting contract");
+
+    }
 };
 
 export const TransactionProvider = ({ children }) => {
@@ -71,6 +77,7 @@ export const TransactionProvider = ({ children }) => {
         setCurrentAccount(accounts[0]);
         // console.log(accounts);
         getAllTransactions();
+        console.log(accounts);
       } else {
         console.log("No account found");
       }
